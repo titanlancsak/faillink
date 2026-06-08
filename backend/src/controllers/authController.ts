@@ -36,14 +36,13 @@ export async function register(req: Request, res: Response) {
     const expires = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
 
     const { rows } = await client.query<User>(
-      `INSERT INTO users (username, email, password, verification_token, verification_token_expires)
-       VALUES ($1, $2, $3, $4, $5)
+      `INSERT INTO users (username, email, password, is_verified)
+       VALUES ($1, $2, $3, TRUE)
        RETURNING id, username, email, bio, avatar_url, is_verified, created_at, updated_at`,
-      [username.toLowerCase(), email.toLowerCase(), hash, verificationToken, expires]
+      [username.toLowerCase(), email.toLowerCase(), hash]
     )
-
+    
     const user = rows[0]
-    await sendVerificationEmail(email, verificationToken)
     const token = signToken(user.id, user.username)
     return res.status(201).json({ user: sanitizeUser(user), token })
   } catch (err) {
