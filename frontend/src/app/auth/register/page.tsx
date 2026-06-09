@@ -36,7 +36,7 @@ export default function RegisterPage() {
       setToken(data.token)
       setUser(data.user)
       toast.success('Account created. Welcome to Agora.')
-      router.push('/feed')
+      window.location.href = '/feed'
     } catch (err: any) {
       toast.error(err.response?.data?.message || 'Registration failed.')
     } finally {

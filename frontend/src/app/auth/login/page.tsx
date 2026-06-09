@@ -30,7 +30,7 @@ export default function LoginPage() {
       setToken(data.token)
       setUser(data.user)
       toast.success('Welcome back.')
-      router.push('/feed')
+      window.location.href = '/feed'
     } catch (err: any) {
       toast.error(err.response?.data?.message || 'Login failed.')
     } finally {
