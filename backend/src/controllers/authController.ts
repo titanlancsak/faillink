@@ -43,6 +43,7 @@ export async function register(req: Request, res: Response) {
     )
     
     const user = rows[0]
+    
     const token = signToken(user.id, user.username)
     return res.status(201).json({ user: sanitizeUser(user), token })
   } catch (err) {
@@ -71,10 +72,6 @@ export async function login(req: Request, res: Response) {
     const valid = await bcrypt.compare(password, user.password as string)
     if (!valid) {
       return res.status(401).json({ message: 'Invalid email or password.' })
-    }
-
-    if (!user.is_verified) {
-      return res.status(403).json({ message: 'Please verify your email before logging in.' })
     }
 
     const token = signToken(user.id, user.username)
