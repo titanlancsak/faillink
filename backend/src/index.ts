@@ -4,7 +4,6 @@ import helmet from 'helmet'
 import morgan from 'morgan'
 import cookieParser from 'cookie-parser'
 import dotenv from 'dotenv'
-import rateLimit from 'express-rate-limit'
 
 import authRoutes from './routes/auth'
 import postRoutes from './routes/posts'
@@ -14,27 +13,10 @@ import friendRoutes from './routes/friends'
 dotenv.config()
 
 const app = express()
-app.set('trust proxy', 1)
 const PORT = process.env.PORT || 4000
 
 // ── Security ──────────────────────────────────────────────
 app.use(helmet())
-// General limiter — all routes
-const generalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100,
-  message: { message: 'Too many requests, please try again later.' }
-})
-
-// Strict limiter — auth routes only
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10,
-  message: { message: 'Too many login attempts, please try again in 15 minutes.' }
-})
-
-app.use('/api', generalLimiter)
-app.use('/api/auth', authLimiter)
 app.use(
   cors({
     origin: process.env.CLIENT_URL || 'http://localhost:3000',

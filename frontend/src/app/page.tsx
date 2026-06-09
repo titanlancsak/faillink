@@ -1,19 +1,12 @@
-'use client'
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { getToken } from '@/lib/auth'
+import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
 
 export default function Home() {
-  const router = useRouter()
-
-  useEffect(() => {
-    const token = getToken()
-    if (token) {
-      router.push('/feed')
-    } else {
-      router.push('/auth/login')
-    }
-  }, [])
-
-  return null
+  const cookieStore = cookies()
+  const token = cookieStore.get('token')
+  if (token) {
+    redirect('/feed')
+  } else {
+    redirect('/auth/login')
+  }
 }

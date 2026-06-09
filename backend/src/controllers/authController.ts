@@ -13,7 +13,7 @@ function signToken(userId: number, username: string): string {
 }
 
 function sanitizeUser(user: User) {
-  const { password, ...safe } = user as any
+  const { password, ...safe } = user
   return safe
 }
 
@@ -21,6 +21,7 @@ export async function register(req: Request, res: Response) {
   const { username, email, password } = req.body
   const client = await pool.connect()
   try {
+    // Check uniqueness
     const existing = await client.query(
       'SELECT id FROM users WHERE email = $1 OR username = $2',
       [email.toLowerCase(), username.toLowerCase()]

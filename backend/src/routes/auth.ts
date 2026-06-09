@@ -14,8 +14,14 @@ router.post(
       .withMessage('Username must be 3–50 characters.')
       .matches(/^[a-zA-Z0-9_]+$/)
       .withMessage('Username may only contain letters, numbers, and underscores.'),
-    body('email').trim().isEmail().withMessage('Valid email required.').normalizeEmail(),
-    body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters.'),
+    body('email')
+      .trim()
+      .isEmail()
+      .withMessage('Valid email required.')
+      .normalizeEmail(),
+    body('password')
+      .isLength({ min: 8 })
+      .withMessage('Password must be at least 8 characters.'),
   ],
   validate,
   register

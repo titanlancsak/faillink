@@ -5,11 +5,6 @@ export interface User {
   password?: string
   bio?: string
   avatar_url?: string
-  is_verified?: boolean
-  verification_token?: string
-  verification_token_expires?: string
-  reset_password_token?: string
-  reset_password_expires?: string
   created_at: string
   updated_at: string
 }

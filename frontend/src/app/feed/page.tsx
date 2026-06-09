@@ -1,6 +1,5 @@
 'use client'
 import { useState, useEffect, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
 import { Loader2, RefreshCw } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { Post } from '@/types'
@@ -11,18 +10,11 @@ import Navbar from '@/components/layout/Navbar'
 import api from '@/lib/api'
 
 export default function FeedPage() {
-  const { user, loading: authLoading } = useAuth()
-  const router = useRouter()
+  const { user } = useAuth()
   const [posts, setPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [requestedIds, setRequestedIds] = useState<Set<number>>(new Set())
-
-  useEffect(() => {
-    if (!authLoading && !user) {
-      router.push('/auth/login')
-    }
-  }, [user, authLoading])
 
   const fetchPosts = useCallback(async (silent = false) => {
     if (!silent) setLoading(true)
@@ -39,8 +31,8 @@ export default function FeedPage() {
   }, [])
 
   useEffect(() => {
-    if (user) fetchPosts()
-  }, [fetchPosts, user])
+    fetchPosts()
+  }, [fetchPosts])
 
   const handleNewPost = (post: Post) => {
     setPosts((prev) => [post, ...prev])
@@ -48,14 +40,6 @@ export default function FeedPage() {
 
   const handleFriendRequest = (userId: number) => {
     setRequestedIds((prev) => new Set(prev).add(userId))
-  }
-
-  if (authLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <Loader2 size={24} className="animate-spin text-steel-400" />
-      </div>
-    )
   }
 
   return (
